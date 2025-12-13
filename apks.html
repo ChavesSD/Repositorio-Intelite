@@ -40,13 +40,22 @@
     <script>
         function navigateToApk(category) {
             // Função para navegar para as categorias de APK
-            // Por enquanto apenas mostra um alerta, pode ser implementado depois
-            const categoryNames = {
-                'totem': 'Totem',
-                'painel': 'Painel',
-                'outros': 'Outros'
+            const pages = {
+                'totem': 'totem.html',
+                'painel': 'painel.html',
+                'outros': 'outros.html'
             };
-            alert(`A página ${categoryNames[category]} será implementada em breve!`);
+            
+            if (pages[category]) {
+                window.location.href = pages[category];
+            } else {
+                const categoryNames = {
+                    'totem': 'Totem',
+                    'painel': 'Painel',
+                    'outros': 'Outros'
+                };
+                alert(`A página ${categoryNames[category]} será implementada em breve!`);
+            }
         }
     </script>
 </body>

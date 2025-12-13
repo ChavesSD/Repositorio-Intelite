@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outros APKs - Intelite</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="logo-intelite.png" alt="Logo Intelite" class="logo">
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <button class="btn-back" onclick="window.location.href='apks.html'">← Voltar</button>
+                <h1 class="page-title">Outros APKs</h1>
+            </div>
+            <div class="apks-list" id="apksList">
+                <!-- APKs serão carregados dinamicamente via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Lista de APKs disponíveis
+        const apks = [
+            {
+                name: 'Auto Start',
+                link: 'https://drive.google.com/file/d/1dVAmQ15goF5D60XJPFGbBgcHDmGaozFT/view?usp=drive_link',
+                icon: '🚀'
+            },
+            {
+                name: 'Sintese de Voz',
+                link: 'https://drive.google.com/file/d/1A0XHY9bQV3zFoHiBm15Shtj-wL30Vske/view?usp=drive_link',
+                icon: '🔊'
+            },
+            {
+                name: 'Wi-Fi ADB Debug',
+                link: 'https://drive.google.com/file/d/1aaAz4zyJIjTbhdg7u0-GzxVSpA2SSjk1/view?usp=drive_link',
+                icon: '📡'
+            }
+        ];
+
+        // Carregar APKs na página
+        document.addEventListener('DOMContentLoaded', function() {
+            const apksList = document.getElementById('apksList');
+            
+            apks.forEach(apk => {
+                const apkCard = document.createElement('div');
+                apkCard.className = 'apk-card';
+                
+                const apkIcon = document.createElement('div');
+                apkIcon.className = 'apk-icon';
+                apkIcon.textContent = apk.icon;
+                
+                const apkName = document.createElement('div');
+                apkName.className = 'apk-name';
+                apkName.textContent = apk.name;
+                
+                const apkLink = document.createElement('a');
+                apkLink.href = apk.link;
+                apkLink.target = '_blank';
+                apkLink.rel = 'noopener noreferrer';
+                apkLink.className = 'apk-link';
+                apkLink.textContent = 'Baixar';
+                
+                apkCard.appendChild(apkIcon);
+                apkCard.appendChild(apkName);
+                apkCard.appendChild(apkLink);
+                apksList.appendChild(apkCard);
+            });
+        });
+    </script>
+</body>
+</html>
+

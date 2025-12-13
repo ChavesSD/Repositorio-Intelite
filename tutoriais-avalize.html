@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriais - Avalize - Intelite</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="logo-intelite.png" alt="Logo Intelite" class="logo">
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <button class="btn-back" onclick="window.location.href='tutoriais.html'">← Voltar</button>
+                <h1 class="page-title">Tutoriais - Avalize</h1>
+            </div>
+            <div class="apks-list" id="videosList">
+                <!-- Vídeos serão carregados dinamicamente via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Lista de vídeos de tutoriais
+        const videos = [
+            {
+                name: 'Tour Completo',
+                link: 'https://drive.google.com/file/d/12xrEh0SfM-2AOcPvVAHDQ6Qbwg2lhrld/view?usp=drive_link',
+                icon: '🎬'
+            }
+        ];
+
+        // Carregar vídeos na página
+        document.addEventListener('DOMContentLoaded', function() {
+            const videosList = document.getElementById('videosList');
+            
+            videos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'apk-card';
+                
+                const videoIcon = document.createElement('div');
+                videoIcon.className = 'apk-icon';
+                videoIcon.textContent = video.icon;
+                
+                const videoName = document.createElement('div');
+                videoName.className = 'apk-name';
+                videoName.textContent = video.name;
+                
+                const videoLink = document.createElement('a');
+                videoLink.href = video.link;
+                videoLink.target = '_blank';
+                videoLink.rel = 'noopener noreferrer';
+                videoLink.className = 'apk-link';
+                videoLink.textContent = 'Assistir';
+                
+                videoCard.appendChild(videoIcon);
+                videoCard.appendChild(videoName);
+                videoCard.appendChild(videoLink);
+                videosList.appendChild(videoCard);
+            });
+        });
+    </script>
+</body>
+</html>
+

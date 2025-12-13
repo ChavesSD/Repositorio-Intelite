@@ -54,6 +54,24 @@
                 const iconCard = document.createElement('div');
                 iconCard.className = 'icon-card';
                 
+                // Adiciona link para página de tutoriais específica se existir
+                if (produto.name === 'AICHECKING') {
+                    iconCard.style.cursor = 'pointer';
+                    iconCard.onclick = function() {
+                        window.location.href = 'tutoriais-aichecking.html';
+                    };
+                } else if (produto.name === 'ATENDIMENTO INTELIGENTE') {
+                    iconCard.style.cursor = 'pointer';
+                    iconCard.onclick = function() {
+                        window.location.href = 'tutoriais-atendimento-inteligente.html';
+                    };
+                } else if (produto.name === 'AVALIZE') {
+                    iconCard.style.cursor = 'pointer';
+                    iconCard.onclick = function() {
+                        window.location.href = 'tutoriais-avalize.html';
+                    };
+                }
+                
                 const iconImg = document.createElement('img');
                 iconImg.src = produto.file;
                 iconImg.alt = produto.name;

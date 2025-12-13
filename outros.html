@@ -43,6 +43,11 @@
                 name: 'Wi-Fi ADB Debug',
                 link: 'https://drive.google.com/file/d/1aaAz4zyJIjTbhdg7u0-GzxVSpA2SSjk1/view?usp=drive_link',
                 icon: '📡'
+            },
+            {
+                name: 'Plataform Tools',
+                link: 'https://drive.google.com/file/d/1o7_kOTt1NYsRs0qUg_3fvtfJrKTY_X83/view?usp=drive_link',
+                icon: '🔧'
             }
         ];
 
@@ -53,10 +58,6 @@
             apks.forEach(apk => {
                 const apkCard = document.createElement('div');
                 apkCard.className = 'apk-card';
-                
-                const apkIcon = document.createElement('div');
-                apkIcon.className = 'apk-icon';
-                apkIcon.textContent = apk.icon;
                 
                 const apkName = document.createElement('div');
                 apkName.className = 'apk-name';
@@ -69,7 +70,6 @@
                 apkLink.className = 'apk-link';
                 apkLink.textContent = 'Baixar';
                 
-                apkCard.appendChild(apkIcon);
                 apkCard.appendChild(apkName);
                 apkCard.appendChild(apkLink);
                 apksList.appendChild(apkCard);
@@ -78,4 +78,5 @@
     </script>
 </body>
 </html>
+
 

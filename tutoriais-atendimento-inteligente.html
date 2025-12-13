@@ -74,10 +74,6 @@
                 const videoCard = document.createElement('div');
                 videoCard.className = 'apk-card';
                 
-                const videoIcon = document.createElement('div');
-                videoIcon.className = 'apk-icon';
-                videoIcon.textContent = video.icon;
-                
                 const videoName = document.createElement('div');
                 videoName.className = 'apk-name';
                 videoName.textContent = video.name;
@@ -89,7 +85,6 @@
                 videoLink.className = 'apk-link';
                 videoLink.textContent = 'Assistir';
                 
-                videoCard.appendChild(videoIcon);
                 videoCard.appendChild(videoName);
                 videoCard.appendChild(videoLink);
                 videosList.appendChild(videoCard);
@@ -98,4 +93,5 @@
     </script>
 </body>
 </html>
+
 

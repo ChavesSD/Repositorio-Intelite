@@ -54,10 +54,6 @@
                 const apkCard = document.createElement('div');
                 apkCard.className = 'apk-card';
                 
-                const apkIcon = document.createElement('div');
-                apkIcon.className = 'apk-icon';
-                apkIcon.textContent = apk.icon;
-                
                 const apkName = document.createElement('div');
                 apkName.className = 'apk-name';
                 apkName.textContent = apk.name;
@@ -69,7 +65,6 @@
                 apkLink.className = 'apk-link';
                 apkLink.textContent = 'Baixar';
                 
-                apkCard.appendChild(apkIcon);
                 apkCard.appendChild(apkName);
                 apkCard.appendChild(apkLink);
                 apksList.appendChild(apkCard);
@@ -78,4 +73,5 @@
     </script>
 </body>
 </html>
+
 

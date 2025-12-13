@@ -161,6 +161,17 @@ main {
     transform: scale(1.1);
 }
 
+.btn-icon-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover .btn-icon-image {
+    transform: scale(1.1);
+}
+
 .btn-text {
     font-size: 1.5rem;
     font-weight: 600;

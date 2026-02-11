@@ -1,0 +1,10 @@
+# Build do projeto Vue/Vite para deploy no Netlify
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Redirecionar SPA: todas as rotas vão para index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

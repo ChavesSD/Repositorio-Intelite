@@ -10,7 +10,7 @@ export const tutoriaisTree = [
     children: [
       {
         value: 'tutoriais-aichecking',
-        title: 'AICHECKING',
+        title: 'AiChekin',
         children: [
           {
             value: 'aichecking-checkin',

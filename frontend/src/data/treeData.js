@@ -1,9 +1,9 @@
 /**
- * Estrutura em árvore para Tutoriais e APKs.
- * Cada nó pode ter: value (id), title, link (opcional, para folhas), children.
+ * Estrutura em colunas (até 4) com árvore infinita de pastas/subpastas/links.
+ * Cada nó pode ter: value (id), title, link (opcional), children (opcional).
  */
 
-export const tutoriaisTree = [
+export const columns = [
   {
     value: 'tutoriais',
     title: 'Tutoriais',
@@ -43,9 +43,6 @@ export const tutoriaisTree = [
       },
     ],
   },
-]
-
-export const apksTree = [
   {
     value: 'apks',
     title: 'APKs',
@@ -81,3 +78,4 @@ export const apksTree = [
     ],
   },
 ]
+

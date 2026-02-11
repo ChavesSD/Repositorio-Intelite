@@ -6,16 +6,21 @@
     </p>
 
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col
+        v-for="col in columns"
+        :key="col.value"
+        cols="12"
+        :md="colMd"
+      >
         <v-card variant="outlined" rounded="lg" class="tree-card tree-card-github">
           <v-card-title class="card-header-github d-flex align-center">
-            <v-icon start size="small">mdi-book-open-variant</v-icon>
-            Tutoriais
+            <v-icon start size="small">mdi-folder</v-icon>
+            {{ col.title }}
           </v-card-title>
           <v-divider class="border-opacity-25" />
           <v-card-text class="pa-0 card-body-github">
             <v-treeview
-              :items="tutoriaisTree"
+              :items="[col]"
               item-value="value"
               item-title="title"
               item-children="children"
@@ -28,50 +33,8 @@
             >
               <template #prepend="{ item }">
                 <v-icon v-if="item.link" size="small" class="mr-2 tree-icon">
-                  {{ item.type === 'video' ? 'mdi-play-circle' : 'mdi-file' }}
+                  {{ item.type === 'apk' ? 'mdi-download' : 'mdi-file' }}
                 </v-icon>
-                <v-icon v-else size="small" class="mr-2 tree-icon">mdi-folder</v-icon>
-              </template>
-              <template #title="{ item }">
-                <a
-                  v-if="item.link"
-                  :href="item.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="tree-link"
-                  @click.stop
-                >
-                  {{ item.title }}
-                </a>
-                <span v-else class="tree-label">{{ item.title }}</span>
-              </template>
-            </v-treeview>
-          </v-card-text>
-        </v-card>
-      </v-col>
-
-      <v-col cols="12" md="6">
-        <v-card variant="outlined" rounded="lg" class="tree-card tree-card-github">
-          <v-card-title class="card-header-github d-flex align-center">
-            <v-icon start size="small">mdi-android</v-icon>
-            APKs
-          </v-card-title>
-          <v-divider class="border-opacity-25" />
-          <v-card-text class="pa-0 card-body-github">
-            <v-treeview
-              :items="apksTree"
-              item-value="value"
-              item-title="title"
-              item-children="children"
-              activatable
-              open-on-click
-              density="comfortable"
-              class="tree-view tree-view-github"
-              variant="plain"
-              color="primary"
-            >
-              <template #prepend="{ item }">
-                <v-icon v-if="item.link" size="small" class="mr-2 tree-icon">mdi-download</v-icon>
                 <v-icon v-else size="small" class="mr-2 tree-icon">mdi-folder</v-icon>
               </template>
               <template #title="{ item }">
@@ -96,9 +59,19 @@
 </template>
 
 <script setup>
+import { computed, onMounted } from 'vue'
 import { useTreeStore } from '../composables/useTreeStore'
 
-const { tutoriaisTree, apksTree } = useTreeStore()
+const { columns, loadFromBackend } = useTreeStore()
+
+const colMd = computed(() => {
+  const n = Math.min(columns.value.length || 1, 4)
+  return 12 / n
+})
+
+onMounted(() => {
+  loadFromBackend()
+})
 </script>
 
 <style scoped>
@@ -184,3 +157,4 @@ const { tutoriaisTree, apksTree } = useTreeStore()
   border-color: #30363d !important;
 }
 </style>
+

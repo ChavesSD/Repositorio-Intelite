@@ -18,8 +18,22 @@ const router = createRouter({
   ],
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.name === 'admin') {
+    const isAuth = typeof window !== 'undefined' &&
+      localStorage.getItem('intelitehub-auth') === 'true'
+
+    if (!isAuth) {
+      return next({ name: 'home' })
+    }
+  }
+
+  next()
+})
+
 router.afterEach((to) => {
   document.title = to.meta.title || 'intelitehub'
 })
 
 export default router
+

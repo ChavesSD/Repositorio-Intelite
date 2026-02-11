@@ -17,8 +17,8 @@
       <v-btn
         variant="text"
         color="primary"
-        to="/admin"
         class="btn-entrar"
+        @click="openLogin"
       >
         Entrar
       </v-btn>
@@ -38,10 +38,88 @@
         </div>
       </v-container>
     </v-footer>
+
+    <v-dialog
+      v-model="loginDialog"
+      max-width="400"
+    >
+      <v-card>
+        <v-card-title class="text-h6">
+          Acesso admin
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="loginForm.username"
+            label="Login"
+            density="compact"
+            variant="outlined"
+            autofocus
+          />
+          <v-text-field
+            v-model="loginForm.password"
+            label="Senha"
+            type="password"
+            density="compact"
+            variant="outlined"
+            @keyup.enter="submitLogin"
+          />
+          <div v-if="loginError" class="login-error">
+            {{ loginError }}
+          </div>
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn variant="text" @click="closeLogin">
+            Cancelar
+          </v-btn>
+          <v-btn color="primary" variant="flat" @click="submitLogin">
+            Entrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const loginDialog = ref(false)
+const loginForm = ref({
+  username: '',
+  password: '',
+})
+const loginError = ref('')
+
+function openLogin () {
+  loginDialog.value = true
+  loginError.value = ''
+}
+
+function closeLogin () {
+  loginDialog.value = false
+  loginForm.value.username = ''
+  loginForm.value.password = ''
+  loginError.value = ''
+}
+
+function submitLogin () {
+  const { username, password } = loginForm.value
+
+  if (username === 'Admin' && password === 'Suporte@2026') {
+    // marca autenticação simples no navegador
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('intelitehub-auth', 'true')
+    }
+    loginError.value = ''
+    loginDialog.value = false
+    router.push({ name: 'admin' })
+  } else {
+    loginError.value = 'Login ou senha inválidos.'
+  }
+}
 </script>
 
 <style scoped>
@@ -139,4 +217,11 @@
   color: #8b949e;
   font-size: 0.8125rem;
 }
+
+.login-error {
+  color: #f85149;
+  font-size: 0.8125rem;
+  margin-top: 8px;
+}
 </style>
+

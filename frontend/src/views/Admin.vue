@@ -76,15 +76,6 @@
                   <v-icon start>mdi-folder-plus</v-icon>
                   Adicionar pasta na raiz
                 </v-btn>
-                <v-btn
-                  size="small"
-                  variant="outlined"
-                  class="ml-2"
-                  @click="addLink(col)"
-                >
-                  <v-icon start>mdi-link-plus</v-icon>
-                  Adicionar link na raiz
-                </v-btn>
               </div>
 
               <div
@@ -117,127 +108,15 @@
 </template>
 
 <script setup>
-import { computed, onMounted, defineComponent } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useTreeStore } from '../composables/useTreeStore'
+import AdminNodeEditor from '../components/AdminNodeEditor.vue'
 
 const { columns, save, resetToDefault, loadFromBackend } = useTreeStore()
 
 const columnMd = computed(() => {
   const n = Math.min(columns.value.length || 1, 4)
   return 12 / n
-})
-
-const AdminNodeEditor = defineComponent({
-  name: 'AdminNodeEditor',
-  props: {
-    node: { type: Object, required: true },
-    depth: { type: Number, default: 0 },
-  },
-  emits: ['delete-node'],
-  setup (props, { emit }) {
-    function ensureChildren () {
-      if (!Array.isArray(props.node.children)) {
-        props.node.children = []
-      }
-    }
-
-    function addFolder () {
-      ensureChildren()
-      props.node.children.push({
-        value: `folder-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        title: 'Nova pasta',
-        children: [],
-      })
-    }
-
-    function addLink () {
-      ensureChildren()
-      props.node.children.push({
-        value: `link-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        title: 'Novo link',
-        link: '',
-      })
-    }
-
-    function removeChild (index) {
-      if (!Array.isArray(props.node.children)) return
-      props.node.children.splice(index, 1)
-    }
-
-    function deleteSelf () {
-      emit('delete-node')
-    }
-
-    return {
-      addFolder,
-      addLink,
-      removeChild,
-      deleteSelf,
-    }
-  },
-  template: `
-    <div class="admin-node" :style="{ marginLeft: depth * 16 + 'px' }">
-      <div class="admin-node-header">
-        <div class="admin-node-fields">
-          <v-text-field
-            v-model="node.title"
-            label="Nome"
-            density="compact"
-            variant="outlined"
-            hide-details
-            class="admin-field"
-          />
-          <v-text-field
-            v-model="node.link"
-            label="Link (opcional)"
-            density="compact"
-            variant="outlined"
-            hide-details
-            class="admin-field"
-          />
-        </div>
-        <div class="admin-node-actions">
-          <v-btn
-            icon
-            size="small"
-            variant="text"
-            @click="addFolder"
-          >
-            <v-icon>mdi-folder-plus</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            size="small"
-            variant="text"
-            @click="addLink"
-          >
-            <v-icon>mdi-link-plus</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            size="small"
-            variant="text"
-            color="error"
-            @click="deleteSelf"
-          >
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-        </div>
-      </div>
-
-      <div
-        v-for="(child, index) in node.children || []"
-        :key="child.value || index"
-        class="admin-node-children"
-      >
-        <AdminNodeEditor
-          :node="child"
-          :depth="depth + 1"
-          @delete-node="() => removeChild(index)"
-        />
-      </div>
-    </div>
-  `,
 })
 
 function addColumn () {
@@ -261,17 +140,6 @@ function addFolder (parent) {
     value: `folder-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     title: 'Nova pasta',
     children: [],
-  })
-}
-
-function addLink (parent) {
-  if (!Array.isArray(parent.children)) {
-    parent.children = []
-  }
-  parent.children.push({
-    value: `link-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    title: 'Novo link',
-    link: '',
   })
 }
 
@@ -312,6 +180,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .admin-columns-info {
@@ -342,6 +211,10 @@ onMounted(() => {
   border-color: #30363d !important;
 }
 
+.admin-column-title {
+  flex: 1 1 320px;
+}
+
 .admin-section {
   margin-bottom: 24px;
 }
@@ -366,46 +239,8 @@ onMounted(() => {
   margin-bottom: 16px;
 }
 
-.admin-node {
-  margin-bottom: 12px;
-}
-
-.admin-node-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.admin-node-fields {
-  flex: 1;
-}
-
-.admin-node-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.admin-node-children {
-  margin-top: 8px;
-}
-
 .admin-field {
   margin-bottom: 0;
-}
-
-.admin-field :deep(.v-field) {
-  background: #0d1117 !important;
-  border-color: #30363d !important;
-}
-
-.admin-field :deep(.v-field__outline) {
-  --v-field-border-opacity: 1;
-}
-
-.admin-field :deep(.v-input__control input),
-.admin-field :deep(.v-field__input) {
-  color: #c9d1d9 !important;
 }
 
 .admin-actions {

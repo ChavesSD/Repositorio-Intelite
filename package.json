@@ -1,0 +1,22 @@
+{
+  "name": "intelite",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/mona-sans": "^5.2.8",
+    "@mdi/font": "^7.4.47",
+    "vue": "^3.4.21",
+    "vue-router": "^4.4.5",
+    "vuetify": "^3.6.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.8"
+  }
+}

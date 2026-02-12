@@ -7,7 +7,9 @@
     "dev": "cd frontend && vite",
     "build": "cd frontend && vite build",
     "preview": "cd frontend && vite preview",
-    "backend": "node backend/server.mjs"
+    "backend": "node backend/server.mjs",
+    "start": "node backend/server.mjs",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@fontsource-variable/mona-sans": "^5.2.8",

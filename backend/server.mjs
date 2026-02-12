@@ -40,6 +40,8 @@ async function getTreesCollection () {
 
 // Caminho do arquivo de dados (JSON) dentro do repositório (fallback)
 const dataPath = path.resolve(__dirname, 'data', 'trees.json')
+// Caminho da build do frontend (Vite) para servir em produção
+const staticPath = path.resolve(__dirname, '../frontend/dist')
 
 // Middleware
 app.use(cors())
@@ -149,6 +151,18 @@ app.put('/api/trees', async (req, res) => {
 // Endpoint simples de health-check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'intelitehub-backend' })
+})
+
+// Servir frontend estático em produção (após APIs)
+app.use(express.static(staticPath))
+
+// SPA fallback: qualquer rota não-API devolve o index.html da build
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'API route not found' })
+  }
+
+  return res.sendFile(path.join(staticPath, 'index.html'))
 })
 
 app.listen(PORT, () => {

@@ -59,18 +59,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
-import { useTreeStore } from '../composables/useTreeStore'
-
-const { columns, loadFromBackend } = useTreeStore()
+import { computed } from 'vue'
+import { columns } from '../data/treeData'
 
 const colMd = computed(() => {
-  const n = Math.min(columns.value.length || 1, 4)
+  const n = Math.min(columns.length || 1, 4)
   return 12 / n
-})
-
-onMounted(() => {
-  loadFromBackend()
 })
 </script>
 
@@ -157,4 +151,3 @@ onMounted(() => {
   border-color: #30363d !important;
 }
 </style>
-

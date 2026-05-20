@@ -3,22 +3,18 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "cd frontend && vite",
     "build": "cd frontend && vite build",
-    "preview": "cd frontend && vite preview",
-    "backend": "node backend/server.mjs",
-    "start": "node backend/server.mjs",
-    "postinstall": "npm run build"
+    "preview": "cd frontend && vite preview"
   },
   "dependencies": {
     "@fontsource-variable/mona-sans": "^5.2.8",
     "@mdi/font": "^7.4.47",
-    "express": "^4.21.1",
-    "cors": "^2.8.5",
-    "mongodb": "^6.9.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.4.5",
     "vuetify": "^3.6.2"
   },
   "devDependencies": {

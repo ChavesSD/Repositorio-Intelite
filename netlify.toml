@@ -3,6 +3,19 @@
   command = "npm run build"
   publish = "frontend/dist"
 
+# Proxy Google Drive (precisa vir ANTES do fallback SPA)
+[[redirects]]
+  from = "/api/drive-folder/:folderId"
+  to = "https://drive.google.com/embeddedfolderview?id=:folderId"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/drive-file/:fileId"
+  to = "https://drive.google.com/uc?export=download&id=:fileId"
+  status = 200
+  force = true
+
 # Redirecionar SPA: todas as rotas vão para index.html
 [[redirects]]
   from = "/*"

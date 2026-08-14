@@ -1,6 +1,6 @@
 # intelitehub
 
-Hub frontend da Intelite inspirado no visual de repositório do GitHub. Lista tutoriais, APKs, mensagens rápidas e links a partir da pasta pública do Google Drive [INTELITEHUB](https://drive.google.com/drive/folders/1cQk7FC72LXgX3Bd4ReCtigQIx1Ij8eSg?usp=drive_link).
+Hub frontend da Intelite inspirado no visual de repositório do GitHub. Lista tutoriais, APKs, imagens, mensagens rápidas e links a partir da pasta pública do Google Drive [INTELITEHUB](https://drive.google.com/drive/folders/1cQk7FC72LXgX3Bd4ReCtigQIx1Ij8eSg?usp=drive_link).
 
 ## Stack
 
@@ -38,7 +38,7 @@ frontend/
   vite.config.js                # proxy do Google Drive (dev)
   src/
     App.vue                     # shell (header / footer)
-    views/Home.vue              # 4 blocos + treeview
+    views/Home.vue              # blocos recolhíveis + treeview
     config/appConfig.js         # pasta raiz do Drive + metadados dos blocos
     services/googleDrive.js     # leitura recursiva do Drive
     data/treeData.js            # fallback dos blocos
@@ -50,12 +50,13 @@ netlify.toml                    # build + proxy Drive em produção
 
 | Pasta no Drive        | Bloco na UI           |
 |-----------------------|-----------------------|
-| TUTORIAIS             | Tutoriais             |
 | APKS                  | Apks                  |
-| MENSAGENS RÁPIDAS     | Mensagens Rápidas     |
+| IMAGENS               | Imagens               |
 | LINKS                 | Links                 |
+| MENSAGENS RÁPIDAS     | Mensagens Rápidas     |
+| TUTORIAIS             | Tutoriais             |
 
-Outras pastas da raiz (IMAGENS, OUTROS, VÍDEOS…) são ignoradas.
+Outras pastas da raiz (OUTROS, VÍDEOS…) são ignoradas.
 
 A pasta do Drive precisa estar pública (“qualquer pessoa com o link”).
 

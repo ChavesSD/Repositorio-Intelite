@@ -14,7 +14,6 @@
         </a>
       </v-app-bar-title>
       <v-spacer />
-      <span class="header-hint d-none d-sm-inline">repositório interno</span>
     </v-app-bar>
 
     <v-main class="main-github">
@@ -90,13 +89,6 @@ import { APP_CONFIG } from './config/appConfig'
 
 .intelitehub-wordmark {
   font-family: 'Mona Sans Variable', 'Mona Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-.header-hint {
-  margin-right: 12px;
-  color: #8b949e;
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
 }
 
 .main-github {

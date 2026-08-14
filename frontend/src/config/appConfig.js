@@ -17,18 +17,10 @@ export const APP_CONFIG = {
     rootFolderUrl:
       'https://drive.google.com/drive/folders/1cQk7FC72LXgX3Bd4ReCtigQIx1Ij8eSg?usp=drive_link',
     /**
-     * Os 4 blocos = 4 pastas no Drive (nomes batem sem acento/caixa).
-     * Outras pastas da raiz (IMAGENS, OUTROS, VÍDEOS…) são ignoradas.
+     * Cada bloco = uma pasta na raiz do Drive (nomes batem sem acento/caixa).
+     * Outras pastas da raiz (OUTROS, VÍDEOS…) são ignoradas.
      */
     blocks: [
-      {
-        value: 'tutoriais',
-        title: 'Tutoriais',
-        icon: 'mdi-play-circle-outline',
-        accent: '#58a6ff',
-        folderNames: ['TUTORIAIS', 'Tutoriais'],
-        defaultType: 'video',
-      },
       {
         value: 'apks',
         title: 'Apks',
@@ -36,6 +28,22 @@ export const APP_CONFIG = {
         accent: '#3fb950',
         folderNames: ['APKS', 'Apks', 'APKs'],
         defaultType: 'apk',
+      },
+      {
+        value: 'imagens',
+        title: 'Imagens',
+        icon: 'mdi-image-outline',
+        accent: '#f0883e',
+        folderNames: ['IMAGENS', 'Imagens'],
+        defaultType: 'image',
+      },
+      {
+        value: 'links',
+        title: 'Links',
+        icon: 'mdi-link-variant',
+        accent: '#79c0ff',
+        folderNames: ['LINKS', 'Links'],
+        defaultType: 'link',
       },
       {
         value: 'mensagens',
@@ -46,12 +54,12 @@ export const APP_CONFIG = {
         defaultType: 'message',
       },
       {
-        value: 'links',
-        title: 'Links',
-        icon: 'mdi-link-variant',
-        accent: '#79c0ff',
-        folderNames: ['LINKS', 'Links'],
-        defaultType: 'link',
+        value: 'tutoriais',
+        title: 'Tutoriais',
+        icon: 'mdi-play-circle-outline',
+        accent: '#58a6ff',
+        folderNames: ['TUTORIAIS', 'Tutoriais'],
+        defaultType: 'video',
       },
     ],
   },

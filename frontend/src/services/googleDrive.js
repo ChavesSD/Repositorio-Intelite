@@ -25,6 +25,7 @@ function detectType(fileName, href, defaultType) {
   const lower = String(fileName || '').toLowerCase()
   if (lower.endsWith('.apk')) return 'apk'
   if (/\.(mp4|webm|mkv|mov|avi)$/i.test(lower)) return 'video'
+  if (/\.(png|jpe?g|gif|webp|svg|bmp|ico)$/i.test(lower)) return 'image'
   if (/\.(txt|md|csv)$/i.test(lower)) return 'message'
   if (/\.(url|html|htm)$/i.test(lower)) return 'link'
   if (/docs\.google\.com\/document/i.test(href || '')) return 'message'
@@ -175,8 +176,8 @@ async function buildTreeFromFolder(folderId, defaultType, visited) {
 }
 
 /**
- * Lê a pasta INTELITEHUB e monta os 4 blocos a partir das pastas
- * TUTORIAIS, APKS, MENSAGENS RÁPIDAS e LINKS.
+ * Lê a pasta INTELITEHUB e monta os blocos a partir das pastas
+ * APKS, IMAGENS, LINKS, MENSAGENS RÁPIDAS e TUTORIAIS.
  */
 export async function loadRepoColumns() {
   const visited = new Set()
@@ -205,6 +206,8 @@ export async function loadRepoColumns() {
     )
   }
 
+  columns.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
+
   const leafTotal = columns.reduce((sum, col) => sum + countLeaves(col), 0)
 
   return {
@@ -223,11 +226,13 @@ export function countLeaves(node) {
 }
 
 export function emptyColumns() {
-  return blocks.map((block) => ({
-    value: block.value,
-    title: block.title,
-    icon: block.icon,
-    accent: block.accent,
-    children: [],
-  }))
+  return blocks
+    .map((block) => ({
+      value: block.value,
+      title: block.title,
+      icon: block.icon,
+      accent: block.accent,
+      children: [],
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
 }

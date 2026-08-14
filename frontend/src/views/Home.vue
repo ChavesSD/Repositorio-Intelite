@@ -17,29 +17,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >Google Drive INTELITEHUB</a>
-        — pastas <strong>TUTORIAIS</strong>, <strong>APKS</strong>,
-        <strong>MENSAGENS RÁPIDAS</strong> e <strong>LINKS</strong>.
       </p>
-      <div class="repo-meta">
-        <span
-          v-for="col in columns"
-          :key="`meta-${col.value}`"
-          class="meta-chip"
-        >
-          <v-icon size="14" :style="{ color: col.accent }">{{ col.icon }}</v-icon>
-          {{ col.title }}
-          <strong>{{ leafCounts[col.value] || 0 }}</strong>
-        </span>
-        <button
-          type="button"
-          class="meta-chip meta-refresh"
-          :disabled="loading"
-          @click="loadColumns"
-        >
-          <v-icon size="14">mdi-refresh</v-icon>
-          Atualizar
-        </button>
-      </div>
       <p v-if="statusNote" class="status-note">{{ statusNote }}</p>
     </header>
 
@@ -58,83 +36,79 @@
       {{ error }}
     </v-alert>
 
-    <v-row v-else>
-      <v-col
+    <v-expansion-panels
+      v-else
+      v-model="openPanels"
+      multiple
+      class="repo-panels"
+    >
+      <v-expansion-panel
         v-for="(col, index) in columns"
         :key="col.value"
-        cols="12"
-        sm="6"
-        lg="3"
-        class="repo-col"
-        :style="{ '--stagger': `${index * 60}ms`, '--accent': col.accent }"
+        :value="col.value"
+        class="repo-panel"
+        :style="{ '--stagger': `${index * 50}ms`, '--accent': col.accent }"
       >
-        <v-card
-          variant="outlined"
-          rounded="lg"
-          class="tree-card tree-card-github"
-        >
-          <v-card-title class="card-header-github d-flex align-center ga-2">
-            <span class="header-accent" aria-hidden="true" />
-            <v-icon size="18" :style="{ color: col.accent }">
-              {{ col.icon }}
-            </v-icon>
-            <span class="header-title">{{ col.title }}</span>
-            <v-spacer />
-            <span class="item-count">{{ leafCounts[col.value] || 0 }}</span>
-          </v-card-title>
-          <v-divider class="border-opacity-25" />
-          <v-card-text class="pa-0 card-body-github">
-            <div v-if="!col.children?.length" class="empty-folder">
-              <v-icon size="28" class="mb-2">mdi-folder-open-outline</v-icon>
-              <p>Pasta vazia</p>
-              <span>Adicione itens na pasta correspondente no Google Drive</span>
-            </div>
-            <v-treeview
-              v-else
-              :items="[col]"
-              item-value="value"
-              item-title="title"
-              item-children="children"
-              activatable
-              open-on-click
-              density="comfortable"
-              class="tree-view tree-view-github"
-              variant="plain"
-              color="primary"
-            >
-              <template #prepend="{ item }">
-                <v-icon size="small" class="mr-2 tree-icon">
-                  {{ itemIcon(item) }}
-                </v-icon>
-              </template>
-              <template #title="{ item }">
-                <button
-                  v-if="item.type === 'message' && item.text"
-                  type="button"
-                  class="tree-action"
-                  :title="'Copiar: ' + item.title"
-                  @click.stop="copyMessage(item)"
-                >
-                  <span class="tree-link">{{ item.title }}</span>
-                  <v-icon size="14" class="action-hint">mdi-content-copy</v-icon>
-                </button>
-                <a
-                  v-else-if="item.link"
-                  :href="item.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="tree-link"
-                  @click.stop
-                >
-                  {{ item.title }}
-                </a>
-                <span v-else class="tree-label">{{ item.title }}</span>
-              </template>
-            </v-treeview>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        <v-expansion-panel-title class="panel-header">
+          <span class="header-accent" aria-hidden="true" />
+          <v-icon size="18" class="mr-2" :style="{ color: col.accent }">
+            {{ col.icon }}
+          </v-icon>
+          <span class="header-title">{{ col.title }}</span>
+          <v-spacer />
+          <span class="item-count">{{ leafCounts[col.value] || 0 }}</span>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text class="panel-body">
+          <div v-if="!col.children?.length" class="empty-folder">
+            <v-icon size="28" class="mb-2">mdi-folder-open-outline</v-icon>
+            <p>Pasta vazia</p>
+            <span>Adicione itens na pasta correspondente no Google Drive</span>
+          </div>
+          <v-treeview
+            v-else
+            :items="col.children"
+            item-value="value"
+            item-title="title"
+            item-children="children"
+            activatable
+            open-on-click
+            density="comfortable"
+            class="tree-view tree-view-github"
+            variant="plain"
+            color="primary"
+          >
+            <template #prepend="{ item }">
+              <v-icon size="small" class="mr-2 tree-icon">
+                {{ itemIcon(item) }}
+              </v-icon>
+            </template>
+            <template #title="{ item }">
+              <button
+                v-if="item.type === 'message' && item.text"
+                type="button"
+                class="tree-action"
+                :title="'Copiar: ' + item.title"
+                @click.stop="copyMessage(item)"
+              >
+                <span class="tree-link">{{ item.title }}</span>
+                <v-icon size="14" class="action-hint">mdi-content-copy</v-icon>
+              </button>
+              <a
+                v-else-if="item.link"
+                :href="item.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="tree-link"
+                @click.stop
+              >
+                {{ item.title }}
+              </a>
+              <span v-else class="tree-label">{{ item.title }}</span>
+            </template>
+          </v-treeview>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
     <v-snackbar
       v-model="snackbar.show"
@@ -163,6 +137,7 @@ const columns = ref(emptyColumns())
 const loading = ref(true)
 const error = ref('')
 const statusNote = ref('')
+const openPanels = ref([])
 
 const snackbar = reactive({
   show: false,
@@ -178,6 +153,7 @@ const leafCounts = computed(() =>
 function itemIcon(item) {
   if (item.type === 'apk') return 'mdi-download'
   if (item.type === 'video') return 'mdi-play-box-outline'
+  if (item.type === 'image') return 'mdi-file-image-outline'
   if (item.type === 'message') return 'mdi-message-outline'
   if (item.type === 'link') return 'mdi-open-in-new'
   if (item.link || item.text) return 'mdi-file-outline'
@@ -204,7 +180,7 @@ async function loadColumns() {
     columns.value = result.columns
     if (result.leafTotal === 0) {
       statusNote.value =
-        'Nenhum arquivo nas pastas TUTORIAIS, APKS, MENSAGENS RÁPIDAS ou LINKS ainda.'
+        'Nenhum arquivo nas pastas do hub ainda.'
     } else {
       statusNote.value = `${result.leafTotal} item(ns) carregado(s) do Google Drive.`
     }
@@ -286,12 +262,7 @@ onMounted(loadColumns)
   font-size: 0.9375rem;
   line-height: 1.55;
   max-width: 46rem;
-  margin: 0 0 1rem;
-}
-
-.page-description strong {
-  color: #c9d1d9;
-  font-weight: 600;
+  margin: 0;
 }
 
 .drive-link {
@@ -302,45 +273,6 @@ onMounted(loadColumns)
 .drive-link:hover {
   text-decoration: underline;
   color: #79b8ff;
-}
-
-.repo-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.meta-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 999px;
-  color: #8b949e;
-  font-size: 0.75rem;
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-
-.meta-chip:hover {
-  border-color: #484f58;
-  background: #1c2128;
-}
-
-.meta-chip strong {
-  color: #c9d1d9;
-  font-weight: 600;
-}
-
-.meta-refresh {
-  cursor: pointer;
-  font: inherit;
-}
-
-.meta-refresh:disabled {
-  opacity: 0.5;
-  cursor: default;
 }
 
 .status-note {
@@ -360,42 +292,47 @@ onMounted(loadColumns)
   font-size: 0.9375rem;
 }
 
-.repo-col {
-  animation: fade-up 0.5s ease both;
+.repo-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.repo-panels :deep(.v-expansion-panel) {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px !important;
+  overflow: hidden;
+  animation: fade-up 0.45s ease both;
   animation-delay: var(--stagger, 0ms);
 }
 
-.tree-card {
-  height: 100%;
-  min-height: 420px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition:
-    border-color 0.22s ease,
-    box-shadow 0.22s ease,
-    transform 0.22s ease;
+.repo-panels :deep(.v-expansion-panel::after) {
+  display: none;
 }
 
-.tree-card-github {
-  background: #161b22 !important;
-  border-color: #30363d !important;
-}
-
-.tree-card:hover {
-  border-color: #484f58 !important;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent, #58a6ff) 28%, transparent);
-  transform: translateY(-2px);
-}
-
-.card-header-github {
-  position: relative;
-  background: linear-gradient(180deg, #1c2128 0%, #161b22 100%) !important;
-  color: #e6edf3 !important;
+.repo-panels :deep(.v-expansion-panel-title) {
+  min-height: 48px;
+  padding: 10px 16px 10px 14px;
+  color: #e6edf3;
   font-weight: 600;
   font-size: 0.875rem;
-  padding: 12px 14px !important;
-  overflow: hidden;
+}
+
+.repo-panels :deep(.v-expansion-panel-title__overlay) {
+  background: transparent;
+}
+
+.repo-panels :deep(.v-expansion-panel-title:hover) {
+  background: #1c2128;
+}
+
+.repo-panels :deep(.v-expansion-panel-text__wrapper) {
+  padding: 0 0 8px;
+}
+
+.panel-header {
+  position: relative;
 }
 
 .header-accent {
@@ -414,6 +351,7 @@ onMounted(loadColumns)
 .item-count {
   min-width: 1.5rem;
   height: 1.5rem;
+  margin-right: 8px;
   padding: 0 0.4rem;
   display: inline-flex;
   align-items: center;
@@ -426,9 +364,8 @@ onMounted(loadColumns)
   font-weight: 600;
 }
 
-.card-body-github {
-  background: #161b22 !important;
-  flex: 1;
+.panel-body {
+  background: #161b22;
 }
 
 .empty-folder {
@@ -436,8 +373,8 @@ onMounted(loadColumns)
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 340px;
-  padding: 1.5rem;
+  min-height: 140px;
+  padding: 1.25rem;
   text-align: center;
   color: #8b949e;
 }
@@ -455,7 +392,7 @@ onMounted(loadColumns)
 }
 
 .tree-view {
-  min-height: 340px;
+  min-height: 0;
 }
 
 .tree-view-github :deep(.v-treeview-item) {
@@ -547,14 +484,9 @@ onMounted(loadColumns)
 
 @media (prefers-reduced-motion: reduce) {
   .repo-header,
-  .repo-col,
-  .tree-card {
+  .repo-panels :deep(.v-expansion-panel) {
     animation: none;
     transition: none;
-  }
-
-  .tree-card:hover {
-    transform: none;
   }
 }
 </style>

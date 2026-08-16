@@ -62,8 +62,66 @@
           <div v-if="!col.children?.length" class="empty-folder">
             <v-icon size="28" class="mb-2">mdi-folder-open-outline</v-icon>
             <p>Pasta vazia</p>
-            <span>Adicione itens na pasta correspondente no Google Drive</span>
+            <span>{{ emptyHint(col) }}</span>
           </div>
+          <ul v-else-if="col.value === 'links'" class="link-list">
+            <li
+              v-for="item in col.children"
+              :key="item.value"
+              class="link-row"
+            >
+              <v-icon size="small" class="tree-icon mr-2">mdi-link-variant</v-icon>
+              <div class="link-info">
+                <span class="link-title">{{ item.title }}</span>
+                <span class="link-url">{{ item.link }}</span>
+              </div>
+              <div class="link-actions">
+                <a
+                  :href="item.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link-btn"
+                  title="Abrir em nova aba"
+                >
+                  <v-icon size="16">mdi-open-in-new</v-icon>
+                  Abrir
+                </a>
+                <button
+                  type="button"
+                  class="link-btn"
+                  title="Copiar URL"
+                  @click="copyLink(item)"
+                >
+                  <v-icon size="16">mdi-content-copy</v-icon>
+                  Copiar
+                </button>
+              </div>
+            </li>
+          </ul>
+          <ul v-else-if="col.value === 'mensagens'" class="link-list">
+            <li
+              v-for="item in col.children"
+              :key="item.value"
+              class="link-row message-row"
+            >
+              <v-icon size="small" class="tree-icon mr-2">mdi-message-outline</v-icon>
+              <div class="link-info">
+                <span class="link-title">{{ item.title }}</span>
+                <span class="link-url message-preview">{{ item.text }}</span>
+              </div>
+              <div class="link-actions">
+                <button
+                  type="button"
+                  class="link-btn"
+                  title="Copiar mensagem"
+                  @click="copyMessage(item)"
+                >
+                  <v-icon size="16">mdi-content-copy</v-icon>
+                  Copiar
+                </button>
+              </div>
+            </li>
+          </ul>
           <v-treeview
             v-else
             :items="col.children"
@@ -83,18 +141,8 @@
               </v-icon>
             </template>
             <template #title="{ item }">
-              <button
-                v-if="item.type === 'message' && item.text"
-                type="button"
-                class="tree-action"
-                :title="'Copiar: ' + item.title"
-                @click.stop="copyMessage(item)"
-              >
-                <span class="tree-link">{{ item.title }}</span>
-                <v-icon size="14" class="action-hint">mdi-content-copy</v-icon>
-              </button>
               <a
-                v-else-if="item.link"
+                v-if="item.link"
                 :href="item.link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -154,16 +202,34 @@ function itemIcon(item) {
   if (item.type === 'apk') return 'mdi-download'
   if (item.type === 'video') return 'mdi-play-box-outline'
   if (item.type === 'image') return 'mdi-file-image-outline'
+  if (item.type === 'document') return 'mdi-file-document-outline'
   if (item.type === 'message') return 'mdi-message-outline'
   if (item.type === 'link') return 'mdi-open-in-new'
   if (item.link || item.text) return 'mdi-file-outline'
   return 'mdi-folder-outline'
 }
 
+function emptyHint(col) {
+  if (col.value === 'links') return 'Nenhum link configurado'
+  if (col.value === 'mensagens') return 'Nenhuma mensagem configurada ainda'
+  return 'Adicione itens na pasta correspondente no Google Drive'
+}
+
 async function copyMessage(item) {
   try {
     await navigator.clipboard.writeText(item.text)
     snackbar.text = `“${item.title}” copiada`
+    snackbar.show = true
+  } catch {
+    snackbar.text = 'Não foi possível copiar'
+    snackbar.show = true
+  }
+}
+
+async function copyLink(item) {
+  try {
+    await navigator.clipboard.writeText(item.link)
+    snackbar.text = `URL de “${item.title}” copiada`
     snackbar.show = true
   } catch {
     snackbar.text = 'Não foi possível copiar'
@@ -366,6 +432,95 @@ onMounted(loadColumns)
 
 .panel-body {
   background: #161b22;
+}
+
+.link-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 8px 8px;
+}
+
+.link-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.link-row:hover {
+  background: rgba(177, 186, 196, 0.08);
+}
+
+.link-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link-title {
+  color: #e6edf3;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.link-url {
+  color: #8b949e;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-preview {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.35;
+}
+
+.link-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: #21262d;
+  color: #c9d1d9;
+  font: inherit;
+  font-size: 0.75rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.link-btn:hover {
+  border-color: #58a6ff;
+  color: #58a6ff;
+  background: rgba(56, 139, 253, 0.1);
+}
+
+@media (max-width: 600px) {
+  .link-row {
+    flex-wrap: wrap;
+  }
+
+  .link-actions {
+    width: 100%;
+    padding-left: 24px;
+  }
 }
 
 .empty-folder {

@@ -1,6 +1,6 @@
 # intelitehub
 
-Hub frontend da Intelite inspirado no visual de repositório do GitHub. Lista tutoriais, APKs, imagens, mensagens rápidas e links a partir da pasta pública do Google Drive [INTELITEHUB](https://drive.google.com/drive/folders/1cQk7FC72LXgX3Bd4ReCtigQIx1Ij8eSg?usp=drive_link).
+Hub frontend da Intelite inspirado no visual de repositório do GitHub. Lista tutoriais, APKs, documentos e imagens a partir da pasta pública do Google Drive [INTELITEHUB](https://drive.google.com/drive/folders/1cQk7FC72LXgX3Bd4ReCtigQIx1Ij8eSg?usp=drive_link); links e mensagens prontas ficam no frontend.
 
 ## Stack
 
@@ -51,12 +51,18 @@ netlify.toml                    # build + proxy Drive em produção
 | Pasta no Drive        | Bloco na UI           |
 |-----------------------|-----------------------|
 | APKS                  | Apks                  |
+| DOCUMENTOS            | Documentos            |
 | IMAGENS               | Imagens               |
-| LINKS                 | Links                 |
-| MENSAGENS RÁPIDAS     | Mensagens Rápidas     |
 | TUTORIAIS             | Tutoriais             |
 
-Outras pastas da raiz (OUTROS, VÍDEOS…) são ignoradas.
+Blocos estáticos no frontend (não leem o Drive):
+
+| Bloco              | Config                          |
+|--------------------|---------------------------------|
+| Links              | `appConfig.staticLinks`         |
+| Mensagens Prontas  | `appConfig.staticMessages`      |
+
+Outras pastas da raiz (LINKS, MENSAGENS…, OUTROS, VÍDEOS…) são ignoradas.
 
 A pasta do Drive precisa estar pública (“qualquer pessoa com o link”).
 

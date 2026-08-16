@@ -16,9 +16,39 @@ function normalizeKey(name) {
 
 function matchBlock(folderName) {
   const key = normalizeKey(folderName)
-  return blocks.find((block) =>
-    block.folderNames.some((name) => normalizeKey(name) === key)
+  return blocks.find(
+    (block) =>
+      block.source !== 'static' &&
+      block.folderNames?.some((name) => normalizeKey(name) === key)
   )
+}
+
+function buildStaticLinks() {
+  return (APP_CONFIG.staticLinks || [])
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
+    .map((item, index) => ({
+      value: `static-link:${index}`,
+      title: item.title,
+      link: item.url,
+      type: 'link',
+    }))
+}
+
+function buildStaticMessages() {
+  return (APP_CONFIG.staticMessages || []).map((item, index) => ({
+    value: `static-message:${index}`,
+    title: item.title,
+    text: item.text,
+    type: 'message',
+  }))
+}
+
+function buildStaticChildren(block) {
+  if (block.source !== 'static') return []
+  if (block.value === 'links') return buildStaticLinks()
+  if (block.value === 'mensagens') return buildStaticMessages()
+  return []
 }
 
 function detectType(fileName, href, defaultType) {
@@ -26,6 +56,7 @@ function detectType(fileName, href, defaultType) {
   if (lower.endsWith('.apk')) return 'apk'
   if (/\.(mp4|webm|mkv|mov|avi)$/i.test(lower)) return 'video'
   if (/\.(png|jpe?g|gif|webp|svg|bmp|ico)$/i.test(lower)) return 'image'
+  if (/\.(pdf|docx?|xlsx?|pptx?|odt|ods|txt|rtf)$/i.test(lower)) return 'document'
   if (/\.(txt|md|csv)$/i.test(lower)) return 'message'
   if (/\.(url|html|htm)$/i.test(lower)) return 'link'
   if (/docs\.google\.com\/document/i.test(href || '')) return 'message'
@@ -177,7 +208,8 @@ async function buildTreeFromFolder(folderId, defaultType, visited) {
 
 /**
  * Lê a pasta INTELITEHUB e monta os blocos a partir das pastas
- * APKS, IMAGENS, LINKS, MENSAGENS RÁPIDAS e TUTORIAIS.
+ * APKS, DOCUMENTOS, IMAGENS e TUTORIAIS.
+ * Links e Mensagens Prontas vêm do frontend (appConfig).
  */
 export async function loadRepoColumns() {
   const visited = new Set()
@@ -189,7 +221,8 @@ export async function loadRepoColumns() {
     title: block.title,
     icon: block.icon,
     accent: block.accent,
-    children: [],
+    source: block.source || 'drive',
+    children: buildStaticChildren(block),
   }))
 
   const columnByValue = Object.fromEntries(columns.map((c) => [c.value, c]))
@@ -232,7 +265,8 @@ export function emptyColumns() {
       title: block.title,
       icon: block.icon,
       accent: block.accent,
-      children: [],
+      source: block.source || 'drive',
+      children: buildStaticChildren(block),
     }))
     .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
 }

@@ -36,12 +36,15 @@ function buildStaticLinks() {
 }
 
 function buildStaticMessages() {
-  return (APP_CONFIG.staticMessages || []).map((item, index) => ({
-    value: `static-message:${index}`,
-    title: item.title,
-    text: item.text,
-    type: 'message',
-  }))
+  return (APP_CONFIG.staticMessages || [])
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
+    .map((item, index) => ({
+      value: `static-message:${index}`,
+      title: item.title,
+      text: item.text,
+      type: 'message',
+    }))
 }
 
 function buildStaticChildren(block) {

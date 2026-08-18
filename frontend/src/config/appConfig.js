@@ -219,6 +219,85 @@ Olá, agradecemos pelo contato! Nosso horário de atendimento encerrou neste mom
 Prezado cliente, devido ao período de inatividade, precisarei finalizar este atendimento no momento. Reiteramos que permanecemos à disposição para atendê-lo novamente sempre que necessário. Será um prazer auxiliá-lo assim que retomar o contato.`,
     },
     {
+      title: 'Ajustar Fuso Horário – SmartPro',
+      text: `Ajustar Fuso Horário – SmartPro
+
+1. Abra as configurações
+
+Acesse:
+
+Configurações ⚙️ → Preferências do dispositivo → Data e hora
+
+2. Ajuste o fuso horário
+
+1. Entre em Definir fuso horário.
+2. Selecione:
+
+GMT-03:00 – Brasília
+
+Caso apareça Fuso horário automático, desative essa opção antes de selecionar o fuso manualmente.
+
+3. Ative a hora automática
+
+Em Data e hora, mantenha:
+
+Data e hora automáticas → Ativado
+
+✅ Pronto. O SmartPro ficará configurado com o horário de Brasília (GMT-03:00).`,
+    },
+    {
+      title: 'Excluir Versão Anterior do Aplicativo',
+      text: `Excluir Versão Anterior do Aplicativo
+
+1. Abra as configurações
+
+Acesse:
+
+Configurações ⚙️ → Aplicativos
+
+2. Localize o aplicativo
+
+Procure pela versão instalada do:
+
+Atendimento Inteligente / Painel
+ou
+Totem
+
+3. Desinstale o aplicativo
+
+1. Abra o aplicativo.
+2. Clique em Desinstalar.
+3. Confirme a remoção.
+4. Aguarde a conclusão.
+
+✅ Pronto. A versão anterior foi removida e o Mini PC está preparado para instalar a nova versão.`,
+    },
+    {
+      title: 'Instalação e Configuração do AutoStart',
+      text: `Instalação e Configuração do AutoStart
+
+1. Instale o AutoStart
+
+Abra o navegador do Mini PC e acesse:
+
+https://bit.ly/a-start
+
+Baixe o arquivo, abra e clique em Instalar.
+
+2. Ative o AutoStart
+
+Abra o aplicativo AutoStart e altere:
+
+Autostartup: OFF → ON
+
+3. Adicione o aplicativo
+
+1. Clique em Adicionar uma aplicação para iniciar.
+2. Selecione o aplicativo desejado, como Atendimento Inteligente ou Totem.
+
+✅ Pronto. O aplicativo selecionado será iniciado automaticamente junto com o Mini PC.`,
+    },
+    {
       title: 'Instalação do Aplicativo do Totem',
       text: `Instalação do Aplicativo do Totem
 

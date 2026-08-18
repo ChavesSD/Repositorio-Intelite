@@ -292,7 +292,7 @@ Autostartup: OFF → ON
 
 3. Adicione o aplicativo
 
-1. Clique em Adicionar uma aplicação para iniciar.
+1. Clique em Aplications para adicionar uma aplicação para iniciar.
 2. Selecione o aplicativo desejado, como Atendimento Inteligente ou Totem.
 
 ✅ Pronto. O aplicativo selecionado será iniciado automaticamente junto com o Mini PC.`,

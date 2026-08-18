@@ -23,16 +23,30 @@ function matchBlock(folderName) {
   )
 }
 
+function mapStaticLink(item, prefix) {
+  if (item.children?.length) {
+    return {
+      value: `${prefix}:folder`,
+      title: item.title,
+      children: item.children
+        .slice()
+        .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
+        .map((child, index) => mapStaticLink(child, `${prefix}:${index}`)),
+    }
+  }
+  return {
+    value: `${prefix}:link`,
+    title: item.title,
+    link: item.url,
+    type: 'link',
+  }
+}
+
 function buildStaticLinks() {
   return (APP_CONFIG.staticLinks || [])
     .slice()
     .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
-    .map((item, index) => ({
-      value: `static-link:${index}`,
-      title: item.title,
-      link: item.url,
-      type: 'link',
-    }))
+    .map((item, index) => mapStaticLink(item, `static-link:${index}`))
 }
 
 function buildStaticMessages() {

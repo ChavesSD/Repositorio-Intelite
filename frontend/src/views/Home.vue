@@ -65,38 +65,86 @@
             <span>{{ emptyHint(col) }}</span>
           </div>
           <ul v-else-if="col.value === 'links'" class="link-list">
-            <li
-              v-for="item in col.children"
-              :key="item.value"
-              class="link-row"
-            >
-              <v-icon size="small" class="tree-icon mr-2">mdi-link-variant</v-icon>
-              <div class="link-info">
-                <span class="link-title">{{ item.title }}</span>
-                <span class="link-url">{{ item.link }}</span>
-              </div>
-              <div class="link-actions">
-                <a
-                  :href="item.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="link-btn"
-                  title="Abrir em nova aba"
-                >
-                  <v-icon size="16">mdi-open-in-new</v-icon>
-                  Abrir
-                </a>
+            <template v-for="item in col.children" :key="item.value">
+              <li v-if="item.children?.length" class="link-folder">
                 <button
                   type="button"
-                  class="link-btn"
-                  title="Copiar URL"
-                  @click="copyLink(item)"
+                  class="link-folder-toggle"
+                  @click="toggleLinkFolder(item.value)"
                 >
-                  <v-icon size="16">mdi-content-copy</v-icon>
-                  Copiar
+                  <v-icon size="small" class="tree-icon mr-2">
+                    {{ isLinkFolderOpen(item.value) ? 'mdi-folder-open-outline' : 'mdi-folder-outline' }}
+                  </v-icon>
+                  <span class="link-title">{{ item.title }}</span>
+                  <span class="item-count folder-count">{{ item.children.length }}</span>
+                  <v-icon size="18" class="folder-chevron">
+                    {{ isLinkFolderOpen(item.value) ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
+                  </v-icon>
                 </button>
-              </div>
-            </li>
+                <ul v-show="isLinkFolderOpen(item.value)" class="link-list nested">
+                  <li
+                    v-for="child in item.children"
+                    :key="child.value"
+                    class="link-row"
+                  >
+                    <v-icon size="small" class="tree-icon mr-2">mdi-link-variant</v-icon>
+                    <div class="link-info">
+                      <span class="link-title">{{ child.title }}</span>
+                      <span class="link-url">{{ child.link }}</span>
+                    </div>
+                    <div class="link-actions">
+                      <a
+                        :href="child.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="link-btn"
+                        title="Abrir em nova aba"
+                      >
+                        <v-icon size="16">mdi-open-in-new</v-icon>
+                        Abrir
+                      </a>
+                      <button
+                        type="button"
+                        class="link-btn"
+                        title="Copiar URL"
+                        @click="copyLink(child)"
+                      >
+                        <v-icon size="16">mdi-content-copy</v-icon>
+                        Copiar
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li v-else class="link-row">
+                <v-icon size="small" class="tree-icon mr-2">mdi-link-variant</v-icon>
+                <div class="link-info">
+                  <span class="link-title">{{ item.title }}</span>
+                  <span class="link-url">{{ item.link }}</span>
+                </div>
+                <div class="link-actions">
+                  <a
+                    :href="item.link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="link-btn"
+                    title="Abrir em nova aba"
+                  >
+                    <v-icon size="16">mdi-open-in-new</v-icon>
+                    Abrir
+                  </a>
+                  <button
+                    type="button"
+                    class="link-btn"
+                    title="Copiar URL"
+                    @click="copyLink(item)"
+                  >
+                    <v-icon size="16">mdi-content-copy</v-icon>
+                    Copiar
+                  </button>
+                </div>
+              </li>
+            </template>
           </ul>
           <ul v-else-if="col.value === 'mensagens'" class="link-list">
             <li
@@ -191,6 +239,16 @@ const snackbar = reactive({
   show: false,
   text: '',
 })
+
+const openLinkFolders = reactive({})
+
+function isLinkFolderOpen(value) {
+  return openLinkFolders[value] !== false
+}
+
+function toggleLinkFolder(value) {
+  openLinkFolders[value] = !isLinkFolderOpen(value)
+}
 
 const leafCounts = computed(() =>
   Object.fromEntries(
@@ -438,6 +496,42 @@ onMounted(loadColumns)
   list-style: none;
   margin: 0;
   padding: 4px 8px 8px;
+}
+
+.link-list.nested {
+  padding: 0 0 4px 18px;
+}
+
+.link-folder {
+  margin: 2px 0;
+}
+
+.link-folder-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.link-folder-toggle:hover {
+  background: rgba(177, 186, 196, 0.08);
+}
+
+.folder-count {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+.folder-chevron {
+  margin-left: auto;
+  color: #8b949e;
 }
 
 .link-row {

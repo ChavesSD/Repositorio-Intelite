@@ -11,7 +11,7 @@ export const APP_CONFIG = {
     headerIcon: '/icone.png',
     footerLogo: '/logointelite.png',
   },
-  /** Links fixos no frontend (não vêm do Drive). */
+  /** Links fixos no frontend (não vêm do Drive). Pastas: { title, children }. */
   staticLinks: [
     { title: 'Aichatz', url: 'https://aichatz.com.br/login' },
     { title: 'Aichekin', url: 'https://aicheckin.com.br/login' },
@@ -23,6 +23,15 @@ export const APP_CONFIG = {
     { title: 'Aipay', url: 'https://aipay.intelite.com.br/login' },
     { title: 'Atendimento Inteligente', url: 'https://intelite.com.br/ai' },
     { title: 'Avalize', url: 'https://avalize.intelite.com.br/login' },
+    {
+      title: 'Encurtados',
+      children: [
+        { title: 'AI Painel', url: 'https://bit.ly/ai-painel' },
+        { title: 'Ai Totem', url: 'https://bit.ly/ai-totem' },
+        { title: 'Auto Start', url: 'https://bit.ly/a-start' },
+        { title: 'Síntese de Voz', url: 'https://bit.ly/s-voz' },
+      ],
+    },
   ],
   /**
    * Mensagens prontas no frontend (não vêm do Drive).
@@ -49,7 +58,7 @@ Mouse: clique 3 a 4 vezes com o botão direito.
 
 Abra o navegador do Mini PC e acesse:
 
-https://shre.ink/aipainel82
+https://bit.ly/ai-painel
 
 Clique em Download e aguarde a conclusão.
 
@@ -72,7 +81,7 @@ Importante: Não abra o aplicativo ainda. Primeiro será realizada a instalaçã
 
 Abra o navegador do Mini PC e acesse:
 
-https://shre.ink/sintesedevoz
+https://bit.ly/s-voz
 
 Clique em Download e aguarde a conclusão.
 
@@ -115,13 +124,22 @@ Configurações ⚙️ → Preferências do dispositivo → Sobre
 2. Pressione 7 vezes seguidas sobre essa opção.
 3. Aguarde a mensagem informando que o Modo Desenvolvedor foi ativado.
 
-3. Acesse as opções
+3. Acesse as opções do desenvolvedor
 
 Volte para:
 
 Preferências do dispositivo → Opções do desenvolvedor
 
-✅ Pronto. O Modo Desenvolvedor está ativado.`,
+4. Ative Permanecer ativo
+
+Dentro de Opções do desenvolvedor:
+
+1. Localize Permanecer ativo.
+2. Ative essa opção.
+
+Permanecer ativo mantém a tela ligada enquanto o Mini PC estiver conectado à energia.
+
+✅ Pronto. O Modo Desenvolvedor e a opção Permanecer ativo estão ativados.`,
     },
     {
       title: 'Limpar Cache do Atendimento Inteligente – SmartPro',
@@ -177,6 +195,71 @@ O SmartPro será reiniciado e retornará às configurações de fábrica.
       text: `Precisa de ajuda?
 
 Caso encontre qualquer dificuldade durante a instalação, entre em contato com o suporte da *Intelite Tecnologia*. Nossa equipe estará pronta para ajudá-lo.`,
+    },
+    {
+      title: 'Intervalo',
+      text: `Intervalo
+
+Estamos em intervalo no momento.
+
+O atendimento será retomado em breve.
+
+Agradecemos pela compreensão.`,
+    },
+    {
+      title: 'Fim de expediente',
+      text: `Fim de expediente
+
+Olá, agradecemos pelo contato! Nosso horário de atendimento encerrou neste momento, mas ficaremos felizes em ajudar a partir das 7h às 17:30h amanhã. Tenha uma excelente noite! 😊`,
+    },
+    {
+      title: 'Inatividade',
+      text: `Inatividade
+
+Prezado cliente, devido ao período de inatividade, precisarei finalizar este atendimento no momento. Reiteramos que permanecemos à disposição para atendê-lo novamente sempre que necessário. Será um prazer auxiliá-lo assim que retomar o contato.`,
+    },
+    {
+      title: 'Instalação do Aplicativo do Totem',
+      text: `Instalação do Aplicativo do Totem
+
+1. Acesse o navegador
+
+1. Conecte um mouse USB ao Mini PC.
+2. Retorne à tela inicial:
+
+Controle remoto: pressione Home 🏠
+Mouse: clique 3 a 4 vezes com o botão direito.
+
+2. Baixe o aplicativo
+
+Abra o navegador do Mini PC e acesse:
+
+https://bit.ly/ai-totem
+
+Clique em Download e aguarde a conclusão.
+
+3. Instale o aplicativo
+
+1. Abra o arquivo baixado.
+2. Caso solicitado, permita a instalação de aplicativos de fontes desconhecidas.
+3. Clique em Instalar.
+4. Aguarde a conclusão.
+
+4. Abra o Totem
+
+1. Abra o aplicativo Totem.
+2. Caso sejam solicitadas permissões, conceda as permissões necessárias.
+3. Aguarde o carregamento do sistema.
+
+5. Teste o funcionamento
+
+Verifique se:
+
+- O aplicativo abre normalmente.
+- As informações são exibidas corretamente.
+- O sistema está funcionando normalmente.
+
+✅ Pronto. O Aplicativo do Totem está instalado e pronto para utilização.`,
     },
   ],
   googleDrive: {

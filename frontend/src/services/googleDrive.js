@@ -73,8 +73,7 @@ function detectType(fileName, href, defaultType) {
   if (lower.endsWith('.apk')) return 'apk'
   if (/\.(mp4|webm|mkv|mov|avi)$/i.test(lower)) return 'video'
   if (/\.(png|jpe?g|gif|webp|svg|bmp|ico)$/i.test(lower)) return 'image'
-  if (/\.(pdf|docx?|xlsx?|pptx?|odt|ods|txt|rtf)$/i.test(lower)) return 'document'
-  if (/\.(txt|md|csv)$/i.test(lower)) return 'message'
+  if (/\.(pdf|docx?|xlsx?|pptx?|odt|ods|txt|md|csv|rtf)$/i.test(lower)) return 'document'
   if (/\.(url|html|htm)$/i.test(lower)) return 'link'
   if (/docs\.google\.com\/document/i.test(href || '')) return 'message'
   if (/docs\.google\.com\/spreadsheets|forms|presentation/i.test(href || '')) {
@@ -196,28 +195,25 @@ async function buildTreeFromFolder(folderId, defaultType, visited) {
   visited.add(folderId)
 
   const entries = await listDriveFolder(folderId)
-  const nodes = []
 
-  for (const entry of entries) {
-    if (entry.isFolder) {
-      const children = await buildTreeFromFolder(entry.id, defaultType, visited)
-      nodes.push({
-        value: `dir:${entry.id}`,
-        title: entry.title,
-        children,
-      })
-      continue
-    }
+  const nodes = await Promise.all(
+    entries.map(async (entry) => {
+      if (entry.isFolder) {
+        // Subpasta com falha não derruba o restante da árvore
+        const children = await buildTreeFromFolder(
+          entry.id,
+          defaultType,
+          visited
+        ).catch(() => [])
+        return { value: `dir:${entry.id}`, title: entry.title, children }
+      }
 
-    const type = detectType(entry.title, entry.href, defaultType)
-    const node = {
-      value: `file:${entry.id}`,
-      title: entry.title,
-      type,
-    }
-    await enrichLeaf(node, entry, type)
-    nodes.push(node)
-  }
+      const type = detectType(entry.title, entry.href, defaultType)
+      const node = { value: `file:${entry.id}`, title: entry.title, type }
+      await enrichLeaf(node, entry, type)
+      return node
+    })
+  )
 
   nodes.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
   return nodes
@@ -244,17 +240,19 @@ export async function loadRepoColumns() {
 
   const columnByValue = Object.fromEntries(columns.map((c) => [c.value, c]))
 
-  for (const entry of rootEntries) {
-    if (!entry.isFolder) continue
-    const block = matchBlock(entry.title)
-    if (!block) continue
-
-    columnByValue[block.value].children = await buildTreeFromFolder(
-      entry.id,
-      block.defaultType,
-      visited
-    )
-  }
+  await Promise.all(
+    rootEntries
+      .filter((entry) => entry.isFolder)
+      .map(async (entry) => {
+        const block = matchBlock(entry.title)
+        if (!block) return
+        columnByValue[block.value].children = await buildTreeFromFolder(
+          entry.id,
+          block.defaultType,
+          visited
+        ).catch(() => [])
+      })
+  )
 
   columns.sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'))
 

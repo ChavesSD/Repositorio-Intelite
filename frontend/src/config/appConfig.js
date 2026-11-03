@@ -26,8 +26,7 @@ export const APP_CONFIG = {
     {
       title: 'Encurtados',
       children: [
-        { title: 'AI Painel', url: 'https://bit.ly/ai-painel' },
-        { title: 'Ai Totem', url: 'https://bit.ly/ai-totem' },
+        { title: 'Ai Hibrido', url: 'https://shre.ink/aihib15' },
         { title: 'Auto Start', url: 'https://bit.ly/a-start' },
         { title: 'Síntese de Voz', url: 'https://bit.ly/s-voz' },
       ],
@@ -51,27 +50,29 @@ Mouse: clique 3 a 4 vezes com o botão direito.
 ✅ Pronto. Agora você pode iniciar a instalação.`,
     },
     {
-      title: 'Download e Instalação do Atendimento Inteligente',
-      text: `Download e Instalação do Atendimento Inteligente
+      title: 'Download e Instalação do Ai Híbrido (Painel e Totem)',
+      text: `Download e Instalação do Ai Híbrido
+
+O Ai Híbrido é o aplicativo único para Painel e Totem.
 
 1. Baixe o aplicativo
 
 Abra o navegador do Mini PC e acesse:
 
-https://bit.ly/ai-painel
+https://shre.ink/aihib15
 
 Clique em Download e aguarde a conclusão.
 
 2. Instale o aplicativo
 
-Abra o arquivo baixado.
-Caso solicitado, permita a instalação de aplicativos de fontes desconhecidas.
-Clique em Instalar.
-Aguarde a conclusão.
+1. Abra o arquivo baixado.
+2. Caso solicitado, permita a instalação de aplicativos de fontes desconhecidas.
+3. Clique em Instalar.
+4. Aguarde a conclusão.
 
-✅ Pronto. O Atendimento Inteligente foi instalado.
+✅ Pronto. O Ai Híbrido foi instalado.
 
-Importante: Não abra o aplicativo ainda. Primeiro será realizada a instalação da Síntese de Voz.`,
+Importante: Não abra o aplicativo ainda. Primeiro será realizada a instalação da Síntese de Voz. Depois, ao abrir o Ai Híbrido, conceda as permissões solicitadas e aguarde o carregamento do sistema.`,
     },
     {
       title: 'Download e Instalação da Síntese de Voz',
@@ -293,52 +294,9 @@ Autostartup: OFF → ON
 3. Adicione o aplicativo
 
 1. Clique em Aplications para adicionar uma aplicação para iniciar.
-2. Selecione o aplicativo desejado, como Atendimento Inteligente ou Totem.
+2. Selecione o aplicativo desejado, como o Ai Híbrido.
 
 ✅ Pronto. O aplicativo selecionado será iniciado automaticamente junto com o Mini PC.`,
-    },
-    {
-      title: 'Instalação do Aplicativo do Totem',
-      text: `Instalação do Aplicativo do Totem
-
-1. Acesse o navegador
-
-1. Conecte um mouse USB ao Mini PC.
-2. Retorne à tela inicial:
-
-Controle remoto: pressione Home 🏠
-Mouse: clique 3 a 4 vezes com o botão direito.
-
-2. Baixe o aplicativo
-
-Abra o navegador do Mini PC e acesse:
-
-https://bit.ly/ai-totem
-
-Clique em Download e aguarde a conclusão.
-
-3. Instale o aplicativo
-
-1. Abra o arquivo baixado.
-2. Caso solicitado, permita a instalação de aplicativos de fontes desconhecidas.
-3. Clique em Instalar.
-4. Aguarde a conclusão.
-
-4. Abra o Totem
-
-1. Abra o aplicativo Totem.
-2. Caso sejam solicitadas permissões, conceda as permissões necessárias.
-3. Aguarde o carregamento do sistema.
-
-5. Teste o funcionamento
-
-Verifique se:
-
-- O aplicativo abre normalmente.
-- As informações são exibidas corretamente.
-- O sistema está funcionando normalmente.
-
-✅ Pronto. O Aplicativo do Totem está instalado e pronto para utilização.`,
     },
   ],
   googleDrive: {

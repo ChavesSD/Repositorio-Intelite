@@ -21,7 +21,7 @@
       <p v-if="statusNote" class="status-note">{{ statusNote }}</p>
     </header>
 
-    <div v-if="loading" class="state-box">
+    <div v-if="loading" class="state-box" role="status" aria-live="polite">
       <v-progress-circular indeterminate color="primary" size="36" width="3" />
       <span>Carregando pastas do Google Drive…</span>
     </div>
@@ -34,6 +34,11 @@
       border="start"
     >
       {{ error }}
+      <template #append>
+        <v-btn size="small" variant="outlined" @click="loadColumns({ force: true })">
+          Tentar novamente
+        </v-btn>
+      </template>
     </v-alert>
 
     <v-expansion-panels
@@ -50,7 +55,6 @@
         :style="{ '--stagger': `${index * 50}ms`, '--accent': col.accent }"
       >
         <v-expansion-panel-title class="panel-header">
-          <span class="header-accent" aria-hidden="true" />
           <v-icon size="18" class="mr-2" :style="{ color: col.accent }">
             {{ col.icon }}
           </v-icon>
@@ -70,6 +74,7 @@
                 <button
                   type="button"
                   class="link-folder-toggle"
+                  :aria-expanded="isLinkFolderOpen(item.value)"
                   @click="toggleLinkFolder(item.value)"
                 >
                   <v-icon size="small" class="tree-icon mr-2">
@@ -82,93 +87,24 @@
                   </v-icon>
                 </button>
                 <ul v-show="isLinkFolderOpen(item.value)" class="link-list nested">
-                  <li
+                  <LinkRow
                     v-for="child in item.children"
                     :key="child.value"
-                    class="link-row"
-                  >
-                    <v-icon size="small" class="tree-icon mr-2">mdi-link-variant</v-icon>
-                    <div class="link-info">
-                      <span class="link-title">{{ child.title }}</span>
-                      <span class="link-url">{{ child.link }}</span>
-                    </div>
-                    <div class="link-actions">
-                      <a
-                        :href="child.link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="link-btn"
-                        title="Abrir em nova aba"
-                      >
-                        <v-icon size="16">mdi-open-in-new</v-icon>
-                        Abrir
-                      </a>
-                      <button
-                        type="button"
-                        class="link-btn"
-                        title="Copiar URL"
-                        @click="copyLink(child)"
-                      >
-                        <v-icon size="16">mdi-content-copy</v-icon>
-                        Copiar
-                      </button>
-                    </div>
-                  </li>
+                    :item="child"
+                    @copy="copyLink"
+                  />
                 </ul>
               </li>
-              <li v-else class="link-row">
-                <v-icon size="small" class="tree-icon mr-2">mdi-link-variant</v-icon>
-                <div class="link-info">
-                  <span class="link-title">{{ item.title }}</span>
-                  <span class="link-url">{{ item.link }}</span>
-                </div>
-                <div class="link-actions">
-                  <a
-                    :href="item.link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link-btn"
-                    title="Abrir em nova aba"
-                  >
-                    <v-icon size="16">mdi-open-in-new</v-icon>
-                    Abrir
-                  </a>
-                  <button
-                    type="button"
-                    class="link-btn"
-                    title="Copiar URL"
-                    @click="copyLink(item)"
-                  >
-                    <v-icon size="16">mdi-content-copy</v-icon>
-                    Copiar
-                  </button>
-                </div>
-              </li>
+              <LinkRow v-else :item="item" @copy="copyLink" />
             </template>
           </ul>
           <ul v-else-if="col.value === 'mensagens'" class="link-list">
-            <li
+            <LinkRow
               v-for="item in col.children"
               :key="item.value"
-              class="link-row message-row"
-            >
-              <v-icon size="small" class="tree-icon mr-2">mdi-message-outline</v-icon>
-              <div class="link-info">
-                <span class="link-title">{{ item.title }}</span>
-                <span class="link-url message-preview">{{ item.text }}</span>
-              </div>
-              <div class="link-actions">
-                <button
-                  type="button"
-                  class="link-btn"
-                  title="Copiar mensagem"
-                  @click="copyMessage(item)"
-                >
-                  <v-icon size="16">mdi-content-copy</v-icon>
-                  Copiar
-                </button>
-              </div>
-            </li>
+              :item="item"
+              @copy="copyMessage"
+            />
           </ul>
           <v-treeview
             v-else
@@ -214,7 +150,9 @@
       class="copy-snack"
     >
       <div class="d-flex align-center ga-2">
-        <v-icon size="18" color="#3fb950">mdi-check-circle</v-icon>
+        <v-icon size="18" :color="snackbar.ok ? '#3fb950' : '#f85149'">
+          {{ snackbar.ok ? 'mdi-check-circle' : 'mdi-alert-circle' }}
+        </v-icon>
         <span>{{ snackbar.text }}</span>
       </div>
     </v-snackbar>
@@ -223,6 +161,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
+import LinkRow from '../components/LinkRow.vue'
 import {
   countLeaves,
   emptyColumns,
@@ -238,6 +177,7 @@ const openPanels = ref([])
 const snackbar = reactive({
   show: false,
   text: '',
+  ok: true,
 })
 
 const openLinkFolders = reactive({})
@@ -273,34 +213,72 @@ function emptyHint(col) {
   return 'Adicione itens na pasta correspondente no Google Drive'
 }
 
-async function copyMessage(item) {
+async function writeClipboard(text) {
   try {
-    await navigator.clipboard.writeText(item.text)
-    snackbar.text = `“${item.title}” copiada`
-    snackbar.show = true
+    await navigator.clipboard.writeText(text)
+    return true
   } catch {
-    snackbar.text = 'Não foi possível copiar'
-    snackbar.show = true
+    // Fallback para contextos sem Clipboard API (http, iframes)
+    const el = document.createElement('textarea')
+    el.value = text
+    el.style.position = 'fixed'
+    el.style.opacity = '0'
+    document.body.appendChild(el)
+    el.select()
+    let ok = false
+    try {
+      ok = document.execCommand('copy')
+    } catch {
+      ok = false
+    }
+    el.remove()
+    return ok
   }
 }
 
-async function copyLink(item) {
+async function copyWithFeedback(text, successText) {
+  const ok = await writeClipboard(text)
+  snackbar.text = ok ? successText : 'Não foi possível copiar'
+  snackbar.ok = ok
+  snackbar.show = true
+}
+
+const copyMessage = (item) =>
+  copyWithFeedback(item.text, `“${item.title}” copiada`)
+const copyLink = (item) =>
+  copyWithFeedback(item.link, `URL de “${item.title}” copiada`)
+
+const CACHE_KEY = 'intelitehub:drive:v1'
+const CACHE_TTL = 10 * 60 * 1000
+
+function readCache() {
   try {
-    await navigator.clipboard.writeText(item.link)
-    snackbar.text = `URL de “${item.title}” copiada`
-    snackbar.show = true
+    const raw = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null')
+    if (raw && Date.now() - raw.at < CACHE_TTL) return raw.result
   } catch {
-    snackbar.text = 'Não foi possível copiar'
-    snackbar.show = true
+    /* cache indisponível */
+  }
+  return null
+}
+
+function writeCache(result) {
+  try {
+    sessionStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({ at: Date.now(), result })
+    )
+  } catch {
+    /* cota cheia ou modo privado */
   }
 }
 
-async function loadColumns() {
+async function loadColumns({ force = false } = {}) {
   loading.value = true
   error.value = ''
   statusNote.value = ''
   try {
-    const result = await loadRepoColumns()
+    const result = (!force && readCache()) || (await loadRepoColumns())
+    writeCache(result)
     columns.value = result.columns
     if (result.leafTotal === 0) {
       statusNote.value =
@@ -318,7 +296,7 @@ async function loadColumns() {
   }
 }
 
-onMounted(loadColumns)
+onMounted(() => loadColumns())
 </script>
 
 <style scoped>
@@ -459,15 +437,6 @@ onMounted(loadColumns)
   position: relative;
 }
 
-.header-accent {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--accent, #58a6ff);
-}
-
 .header-title {
   letter-spacing: -0.01em;
 }
@@ -534,89 +503,6 @@ onMounted(loadColumns)
   color: #8b949e;
 }
 
-.link-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 10px;
-  border-radius: 6px;
-  transition: background 0.15s ease;
-}
-
-.link-row:hover {
-  background: rgba(177, 186, 196, 0.08);
-}
-
-.link-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.link-title {
-  color: #e6edf3;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.link-url {
-  color: #8b949e;
-  font-size: 0.75rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.message-preview {
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  line-height: 1.35;
-}
-
-.link-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border: 1px solid #30363d;
-  border-radius: 6px;
-  background: #21262d;
-  color: #c9d1d9;
-  font: inherit;
-  font-size: 0.75rem;
-  text-decoration: none;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
-}
-
-.link-btn:hover {
-  border-color: #58a6ff;
-  color: #58a6ff;
-  background: rgba(56, 139, 253, 0.1);
-}
-
-@media (max-width: 600px) {
-  .link-row {
-    flex-wrap: wrap;
-  }
-
-  .link-actions {
-    width: 100%;
-    padding-left: 24px;
-  }
-}
-
 .empty-folder {
   display: flex;
   flex-direction: column;
@@ -674,30 +560,6 @@ onMounted(loadColumns)
   color: #79b8ff;
 }
 
-.tree-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  max-width: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  font: inherit;
-}
-
-.action-hint {
-  color: #484f58;
-  opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
-}
-
-.tree-action:hover .action-hint {
-  opacity: 1;
-  color: #8b949e;
-}
-
 :deep(.v-treeview-item) {
   min-height: 38px;
 }
@@ -713,6 +575,18 @@ onMounted(loadColumns)
 
 :deep(.v-divider) {
   border-color: #30363d !important;
+}
+
+.link-folder-toggle:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: -2px;
+}
+
+.tree-link:focus-visible,
+.drive-link:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .copy-snack :deep(.v-snackbar__content) {

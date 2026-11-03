@@ -72,7 +72,13 @@ Clique em Download e aguarde a conclusão.
 
 ✅ Pronto. O Ai Híbrido foi instalado.
 
-Importante: Não abra o aplicativo ainda. Primeiro será realizada a instalação da Síntese de Voz. Depois, ao abrir o Ai Híbrido, conceda as permissões solicitadas e aguarde o carregamento do sistema.`,
+3. Abra o aplicativo
+
+1. Abra o Ai Híbrido.
+2. Caso sejam solicitadas permissões, conceda as permissões necessárias.
+3. Aguarde o carregamento do sistema.
+
+Importante: O Ai Híbrido já tem a Síntese de Voz integrada. Não é necessário instalar a Síntese de Voz separadamente.`,
     },
     {
       title: 'Download e Instalação da Síntese de Voz',

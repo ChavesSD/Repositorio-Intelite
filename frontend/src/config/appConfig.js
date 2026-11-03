@@ -357,6 +357,20 @@ Autostartup: OFF → ON
         accent: '#58a6ff',
         folderNames: ['TUTORIAIS', 'Tutoriais'],
         defaultType: 'video',
+        /**
+         * Agrupa em pastas os arquivos soltos na raiz da pasta do Drive.
+         * `prefixes` comparam com o início do nome (sem acento/caixa).
+         * O que não casar com nenhuma categoria vai para `fallbackCategory`.
+         */
+        categories: [
+          { title: 'Atendimento Inteligente', prefixes: ['AI -', 'Treinamento AI'] },
+          { title: 'Aicheckin', prefixes: ['Aicheckin'] },
+          { title: 'Aiconsumer', prefixes: ['Aiconsumer'] },
+          { title: 'Avalize', prefixes: ['Avalize'] },
+          { title: 'Mini PC', prefixes: ['Mini PC', 'MiniPC'] },
+          { title: 'Impressora', prefixes: ['Instalação da Impressora'] },
+        ],
+        fallbackCategory: 'Outros',
       },
     ],
   },

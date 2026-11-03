@@ -248,7 +248,7 @@ const copyMessage = (item) =>
 const copyLink = (item) =>
   copyWithFeedback(item.link, `URL de “${item.title}” copiada`)
 
-const CACHE_KEY = 'intelitehub:drive:v1'
+const CACHE_KEY = 'intelitehub:drive:v2'
 const CACHE_TTL = 10 * 60 * 1000
 
 function readCache() {

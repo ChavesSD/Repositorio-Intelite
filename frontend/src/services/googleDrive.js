@@ -220,6 +220,38 @@ async function buildTreeFromFolder(folderId, defaultType, visited) {
 }
 
 /**
+ * Agrupa em pastas virtuais os arquivos soltos na raiz do bloco, conforme
+ * `block.categories` (appConfig). Pastas reais do Drive são mantidas como estão.
+ */
+function groupByCategory(nodes, block) {
+  if (!block.categories?.length) return nodes
+
+  const folders = nodes.filter((node) => node.children)
+  const files = nodes.filter((node) => !node.children)
+  const groups = new Map()
+
+  for (const file of files) {
+    const key = normalizeKey(file.title)
+    const category = block.categories.find((cat) =>
+      cat.prefixes.some((prefix) => key.startsWith(normalizeKey(prefix)))
+    )
+    const title = category?.title || block.fallbackCategory || 'Outros'
+    if (!groups.has(title)) groups.set(title, [])
+    groups.get(title).push(file)
+  }
+
+  const grouped = [...groups].map(([title, children]) => ({
+    value: `cat:${block.value}:${normalizeKey(title)}`,
+    title,
+    children,
+  }))
+
+  return [...folders, ...grouped].sort((a, b) =>
+    a.title.localeCompare(b.title, 'pt-BR')
+  )
+}
+
+/**
  * Lê a pasta INTELITEHUB e monta os blocos a partir das pastas
  * APKS, DOCUMENTOS, IMAGENS e TUTORIAIS.
  * Links e Mensagens Prontas vêm do frontend (appConfig).
@@ -246,11 +278,12 @@ export async function loadRepoColumns() {
       .map(async (entry) => {
         const block = matchBlock(entry.title)
         if (!block) return
-        columnByValue[block.value].children = await buildTreeFromFolder(
+        const children = await buildTreeFromFolder(
           entry.id,
           block.defaultType,
           visited
         ).catch(() => [])
+        columnByValue[block.value].children = groupByCategory(children, block)
       })
   )
 
